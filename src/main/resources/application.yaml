@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/aim
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
