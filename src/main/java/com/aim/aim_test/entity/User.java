@@ -2,11 +2,13 @@ package com.aim.aim_test.entity;
 
 import com.aim.aim_test.dto.SignupRequestDto;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class User {
     @Id
@@ -22,6 +24,12 @@ public class User {
     public User(SignupRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();
+        this.balance = BigDecimal.ZERO;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
         this.balance = BigDecimal.ZERO;
     }
 
