@@ -1,12 +1,9 @@
 package com.aim.aim_test.controller;
 
 import com.aim.aim_test.dto.AccountRequestDto;
-import com.aim.aim_test.entity.Account;
 import com.aim.aim_test.security.UserDetailsImpl;
 import com.aim.aim_test.service.AccountService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

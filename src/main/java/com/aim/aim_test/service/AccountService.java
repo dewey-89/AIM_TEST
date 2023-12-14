@@ -3,7 +3,10 @@ package com.aim.aim_test.service;
 import com.aim.aim_test.dto.AccountRequestDto;
 import com.aim.aim_test.dto.AccountResponseDto;
 import com.aim.aim_test.entity.Account;
+import com.aim.aim_test.entity.AccountHistory;
+import com.aim.aim_test.entity.AccountMessageType;
 import com.aim.aim_test.entity.User;
+import com.aim.aim_test.repository.AccountHistoryRepository;
 import com.aim.aim_test.repository.AccountRepository;
 import com.aim.aim_test.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final AccountHistoryRepository accountHistoryRepository;
 
     // 계좌 생성
     public ResponseEntity<?> createAccount(User user) {
-        if(getAccountByUserId(user.getId()) != null) {
+        if(accountRepository.findByUserId(user.getId()).isPresent()) {
             return ResponseEntity.badRequest().body("이미 계좌가 존재합니다.");
         }
         Account account = new Account(user);
@@ -42,6 +46,7 @@ public class AccountService {
         Account account = getAccountByUserId(userId);
         log.info("account: {}", account);
         account.deposit(requestDto.getAmount());
+        accountHistoryRepository.save(new AccountHistory(AccountMessageType.DEPOSIT,requestDto.getAmount(), account.getBalance(), account));
         return ResponseEntity.ok().body(new AccountResponseDto("입금 성공", account.getBalance()));
     }
 
@@ -50,7 +55,11 @@ public class AccountService {
     public ResponseEntity<?> withdraw(UserDetailsImpl userDetails, AccountRequestDto requestDto) {
         Long userId = userDetails.getUser().getId();
         Account account = getAccountByUserId(userId);
+        if(account.getBalance().compareTo(requestDto.getAmount()) < 0) {
+            return ResponseEntity.badRequest().body("잔액이 부족합니다.");
+        }
         account.withdraw(requestDto.getAmount());
+        accountHistoryRepository.save(new AccountHistory(AccountMessageType.WITHDRAW,requestDto.getAmount(), account.getBalance(), account));
         return ResponseEntity.ok().body(new AccountResponseDto("출금 성공", account.getBalance()));
     }
 
