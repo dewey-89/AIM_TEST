@@ -1,6 +1,5 @@
 package com.aim.aim_test.controller;
 
-import com.aim.aim_test.dto.LoginRequestDto;
 import com.aim.aim_test.dto.SignupRequestDto;
 import com.aim.aim_test.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +16,6 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
-    }
-
-    @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
-        return userService.login(requestDto,res);
     }
 
     @GetMapping("/logout")

@@ -1,6 +1,5 @@
 package com.aim.aim_test.service;
 
-import com.aim.aim_test.dto.LoginRequestDto;
 import com.aim.aim_test.dto.SignupRequestDto;
 import com.aim.aim_test.entity.User;
 import com.aim.aim_test.jwt.JwtUtil;
@@ -34,23 +33,6 @@ public class UserService {
         User user = new User(username, password);
         userRepository.save(user);
         return ResponseEntity.ok().body("회원가입 성공");
-    }
-
-    public ResponseEntity<?> login(LoginRequestDto requestDto, HttpServletResponse res) {
-        String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
-
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            return ResponseEntity.badRequest().body("아이디가 존재하지 않습니다.");
-        }
-        if (!passwordEncoder.matches(password, user.get().getPassword())) {
-            return ResponseEntity.badRequest().body("비밀번호가 틀렸습니다.");
-        }
-
-        String jwtToken = jwtUtil.createToken(user.get().getUsername());
-        jwtUtil.addJwtToCookie(jwtToken, res);
-        return ResponseEntity.ok().body("로그인 성공");
     }
 
     public ResponseEntity<?> logout(HttpServletResponse res) {
