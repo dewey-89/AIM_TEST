@@ -33,6 +33,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String tokenValue = jwtUtil.getTokenFromRequest(req);
 
+        if(tokenValue == null || tokenValue.isEmpty()){
+            filterChain.doFilter(req, res);
+            return;
+        }
+
         if (StringUtils.hasText(tokenValue)) {
             // JWT 토큰 substring
             tokenValue = jwtUtil.substringToken(tokenValue);

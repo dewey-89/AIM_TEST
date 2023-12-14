@@ -16,4 +16,4 @@ spring:
 
 jwt:
   secret:
-    key: ${JWT_SECRET_KEY}
+    key: ${JWT_SECRET_KEY} /* secret key는 Base64로 인코딩해 환경변수로 주입해주고 있다. */

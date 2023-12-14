@@ -20,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AccountService accountService;
 
 
     public ResponseEntity<?> signup(SignupRequestDto requestDto) {
@@ -32,6 +33,7 @@ public class UserService {
         }
         User user = new User(username, password);
         userRepository.save(user);
+        accountService.createAccount(user);
         return ResponseEntity.ok().body("회원가입 성공");
     }
 
