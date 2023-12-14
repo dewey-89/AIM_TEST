@@ -1,5 +1,6 @@
 package com.aim.aim_test.controller;
 
+import com.aim.aim_test.dto.AccountHistoryDto;
 import com.aim.aim_test.dto.AccountRequestDto;
 import com.aim.aim_test.security.UserDetailsImpl;
 import com.aim.aim_test.service.AccountService;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +41,12 @@ public class AccountController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody AccountRequestDto requestDto) {
         return accountService.withdraw(userDetails, requestDto);
+    }
+
+    @GetMapping("/history") // 계좌 입출금 내역 조회
+    public List<AccountHistoryDto> getAccountHistory(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return accountService.getAccountHistory(userDetails);
     }
 
 

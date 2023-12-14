@@ -1,5 +1,6 @@
 package com.aim.aim_test.service;
 
+import com.aim.aim_test.dto.AccountHistoryDto;
 import com.aim.aim_test.dto.AccountRequestDto;
 import com.aim.aim_test.dto.AccountResponseDto;
 import com.aim.aim_test.entity.Account;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -61,6 +64,13 @@ public class AccountService {
         account.withdraw(requestDto.getAmount());
         accountHistoryRepository.save(new AccountHistory(AccountMessageType.WITHDRAW,requestDto.getAmount(), account.getBalance(), account));
         return ResponseEntity.ok().body(new AccountResponseDto("출금 성공", account.getBalance()));
+    }
+
+    // 계좌 입출금 내역 조회
+    public List<AccountHistoryDto> getAccountHistory(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        Account account = getAccountByUserId(userId);
+        return AccountHistoryDto.of(accountHistoryRepository.findAllByAccount(account));
     }
 
     // 사용자의 계좌 존재하는지 확인하는 메서드
