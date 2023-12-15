@@ -3,6 +3,7 @@ package com.aim.aim_test.security;
 
 import com.aim.aim_test.dto.LoginRequestDto;
 import com.aim.aim_test.entity.LoginHistory;
+import com.aim.aim_test.entity.UserRoleEnum;
 import com.aim.aim_test.jwt.JwtUtil;
 import com.aim.aim_test.repository.LoginHistoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,9 +52,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult){
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
         // JWT 생성 및 Cookie 저장
-        String token = jwtUtil.createToken(username);
+        String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
 
         // 로그인 기록 저장
