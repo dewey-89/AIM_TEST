@@ -1,5 +1,6 @@
 package com.aim.aim_test.jwt;
 
+import com.aim.aim_test.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -27,6 +28,10 @@ public class JwtUtil {
 
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
+
+    // 사용자 권한 값의 KEY
+    public static final String AUTHORIZATION_KEY = "auth";
+
     // 토큰 만료시간
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
@@ -42,12 +47,13 @@ public class JwtUtil {
     }
 
     // JWT 토큰 생성
-    public String createToken(String username) {
+    public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username) // 사용자 식별자값(ID)
+                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
